@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0
+
+### Cleanup suggestions
+
+- New **Suggestions** tab. It lists well-known folders that are usually safe to clean up and shows how much space each one takes. It covers developer tools (Xcode DerivedData, device support files, archives, simulators, `node_modules`, npm/Yarn/pnpm/Bun caches, Rust `target`, Gradle, CocoaPods, Flutter, Python, Go, Homebrew, Docker, IDE caches), design and video apps (Adobe media cache, Final Cut Pro render files, Figma), browsers, chat apps, Spotify, iPhone backups, logs, temporary files and installers left in Downloads.
+- Each suggestion explains what the folder is and what happens if you delete it. It is marked **Safe to delete** (it is recreated automatically) or **Review first** (it may hold things you want, or should be cleaned from its own app).
+- Folders in the file list show a badge when they are a suggestion, or how much cleanable space they contain.
+- Build folders are only suggested when the project confirms them: `target` needs a `Cargo.toml` next to it, `Pods` needs a `Podfile`, and so on. Nested matches are counted once.
+- Detection runs locally on the scanned tree. Nothing is sent over the network.
+
 ## 0.4.0
 
 This is the first release of the maintained fork. Most of the app was rewritten on Tauri 2 with a native Rust scanner.

@@ -5,6 +5,7 @@ import {
   onScanDone,
   onScanProgress,
   type FileEntry,
+  type Insight,
   type ScanProgress,
   type ScanSummary,
   type TreeNode,
@@ -15,16 +16,16 @@ import { colorFor, FREE_COLOR, REST_COLOR } from "../lib/colors";
 import { isMac, isWindows } from "../lib/platform";
 import { useSettings } from "../lib/settings";
 import { useT } from "../lib/i18n";
+import { insightText } from "../lib/insights";
 import type { Target } from "../App";
 import Sunburst from "./Sunburst";
 import Treemap from "./Treemap";
 import ContextMenu, { type MenuItem } from "./ContextMenu";
+import Row, { type Item } from "./Row";
+import Suggestions, { SafetyBadge } from "./Suggestions";
 import {
   ArrowUpIcon,
-  CheckIcon,
   ChevronIcon,
-  FileIcon,
-  FolderIcon,
   RefreshIcon,
   SunburstIcon,
   TrashIcon,
@@ -36,13 +37,6 @@ interface Props {
   target: Target;
   summary: ScanSummary;
   onHome: () => void;
-}
-
-interface Item {
-  name: string;
-  path: string;
-  size: number;
-  isDir: boolean;
 }
 
 interface Tooltip {
@@ -66,7 +60,8 @@ export default function Results({ target, summary: initialSummary, onHome }: Pro
   const [chartTree, setChartTree] = useState<TreeNode | null>(null);
   const [listTree, setListTree] = useState<TreeNode | null>(null);
   const [largest, setLargest] = useState<FileEntry[] | null>(null);
-  const [tab, setTab] = useState<"contents" | "largest">("contents");
+  const [tab, setTab] = useState<"contents" | "largest" | "suggestions">("contents");
+  const [insights, setInsights] = useState<Insight[]>([]);
   const [version, setVersion] = useState(0);
   const [hovered, setHovered] = useState<string | null>(null);
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
@@ -108,6 +103,39 @@ export default function Results({ target, summary: initialSummary, onHome }: Pro
     };
   }, [tab, focus, version]);
 
+  useEffect(() => {
+    let alive = true;
+    api
+      .insights()
+      .then((found) => alive && setInsights(found))
+      .catch(() => alive && setInsights([]));
+    return () => {
+      alive = false;
+    };
+  }, [version]);
+
+  // Suggestions inside the focused folder, and a quick lookup for list badges.
+  const focusInsights = useMemo(
+    () =>
+      focus === root
+        ? insights
+        : insights.filter((i) => i.path === focus || i.path.startsWith(focus + "/") || i.path.startsWith(focus + "\\")),
+    [insights, focus, root],
+  );
+  const insightByPath = useMemo(() => new Map(insights.map((i) => [i.path, i])), [insights]);
+  // Total suggested size inside each folder between the focus and the matches.
+  const cleanableIn = useMemo(() => {
+    const totals = new Map<string, number>();
+    for (const i of focusInsights) {
+      let p = parentPath(root, i.path);
+      while (p !== null && p.length > focus.length) {
+        totals.set(p, (totals.get(p) ?? 0) + i.size);
+        p = parentPath(root, p);
+      }
+    }
+    return totals;
+  }, [focusInsights, focus, root]);
+
   const hues = useMemo(() => huesFor(chartTree), [chartTree]);
 
   const focusOn = useCallback(
@@ -127,16 +155,18 @@ export default function Results({ target, summary: initialSummary, onHome }: Pro
   const toggleSelect = useCallback((item: Item) => {
     setSelection((prev) => {
       const next = new Map(prev);
-      if (next.has(item.path)) {
-        next.delete(item.path);
-      } else {
-        // Selecting a folder makes selected items inside it redundant, and
-        // selecting an item inside an already selected folder does nothing.
-        for (const p of next.keys()) {
-          if (item.path.startsWith(p + "/") || item.path.startsWith(p + "\\")) return prev;
-          if (p.startsWith(item.path + "/") || p.startsWith(item.path + "\\")) next.delete(p);
-        }
-        next.set(item.path, item);
+      if (next.has(item.path)) next.delete(item.path);
+      else addToSelection(next, item);
+      return next;
+    });
+  }, []);
+
+  const selectMany = useCallback((items: Item[], select: boolean) => {
+    setSelection((prev) => {
+      const next = new Map(prev);
+      for (const item of items) {
+        if (!select) next.delete(item.path);
+        else if (!next.has(item.path)) addToSelection(next, item);
       }
       return next;
     });
@@ -382,7 +412,13 @@ export default function Results({ target, summary: initialSummary, onHome }: Pro
               {t("contents")}
             </button>
             <button className={tab === "largest" ? "active" : ""} onClick={() => setTab("largest")}>
-              {t("largestFiles")}
+              {t("tabLargest")}
+            </button>
+            <button className={tab === "suggestions" ? "active" : ""} onClick={() => setTab("suggestions")}>
+              {t("suggestions")}
+              {focusInsights.length > 0 && (
+                <span className="tab-count">{fmt(focusInsights.reduce((a, i) => a + i.size, 0))}</span>
+              )}
             </button>
           </div>
 
@@ -390,6 +426,7 @@ export default function Results({ target, summary: initialSummary, onHome }: Pro
             {tab === "contents" &&
               listTree?.children?.map((c) => {
                 const hue = hues.get(c.path);
+                const insight = insightByPath.get(c.path);
                 return (
                   <Row
                     key={c.path}
@@ -401,6 +438,16 @@ export default function Results({ target, summary: initialSummary, onHome }: Pro
                         : c.isDir
                           ? t("filesCount", { n: formatNumber(c.files, settings.lang) })
                           : undefined
+                    }
+                    badge={
+                      insight ? (
+                        <SafetyBadge
+                          safety={insight.safety}
+                          title={`${insightText(settings.lang, insight.rule).title}: ${insightText(settings.lang, insight.rule).desc}`}
+                        />
+                      ) : cleanableIn.has(c.path) ? (
+                        <span className="badge badge-hint">{t("cleanable", { size: fmt(cleanableIn.get(c.path)!) })}</span>
+                      ) : undefined
                     }
                     percent={formatPercent(c.size, focusSize)}
                     ratio={focusSize > 0 ? c.size / focusSize : 0}
@@ -421,6 +468,17 @@ export default function Results({ target, summary: initialSummary, onHome }: Pro
               <div className="row row-rest muted small">
                 {restLabel(listTree.restCount)} · {fmt(listTree.restSize)}
               </div>
+            )}
+            {tab === "suggestions" && (
+              <Suggestions
+                insights={focusInsights}
+                selected={selectedPaths}
+                fmt={fmt}
+                onToggle={toggleSelect}
+                onSelectMany={selectMany}
+                onOpen={(item) => (item.isDir ? focusOn(item.path) : api.reveal(item.path))}
+                onMenu={(item, x, y) => openMenu(item, x, y)}
+              />
             )}
             {tab === "largest" && largest === null && <div className="empty muted">{t("loading")}</div>}
             {tab === "largest" &&
@@ -499,61 +557,6 @@ export default function Results({ target, summary: initialSummary, onHome }: Pro
   );
 }
 
-interface RowProps {
-  item: Item;
-  color: string;
-  detail?: string;
-  detailIsPath?: boolean;
-  percent: string;
-  ratio: number;
-  fmt: (n: number) => string;
-  hovered: boolean;
-  selected: boolean;
-  onHover: (path: string | null) => void;
-  onToggle: () => void;
-  onOpen: () => void;
-  onMenu: (x: number, y: number) => void;
-}
-
-function Row({ item, color, detail, detailIsPath, percent, ratio, fmt, hovered, selected, onHover, onToggle, onOpen, onMenu }: RowProps) {
-  return (
-    <div
-      className={"row" + (hovered ? " row-hover" : "") + (selected ? " row-selected" : "")}
-      onMouseEnter={() => onHover(item.path)}
-      onClick={onOpen}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        onMenu(e.clientX, e.clientY);
-      }}
-      title={item.path}
-    >
-      <button
-        className={"check" + (selected ? " checked" : "")}
-        onClick={(e) => {
-          e.stopPropagation();
-          onToggle();
-        }}
-        aria-pressed={selected}
-      >
-        {selected && <CheckIcon width={12} height={12} />}
-      </button>
-      <span className="swatch" style={{ background: color }} />
-      {item.isDir ? <FolderIcon className="row-icon" /> : <FileIcon className="row-icon muted" />}
-      <div className="row-main">
-        <div className="row-name">{item.name}</div>
-        {detail && <div className={"row-detail muted" + (detailIsPath ? " row-detail-path" : "")}>{detail}</div>}
-        <div className="row-bar">
-          <div style={{ width: `${Math.max(ratio * 100, 0.5)}%`, background: color }} />
-        </div>
-      </div>
-      <div className="row-size">
-        <div>{fmt(item.size)}</div>
-        <div className="muted small">{percent}</div>
-      </div>
-    </div>
-  );
-}
-
 function SpaceBar({ disk, scanned, fmt }: { disk: NonNullable<Target["disk"]>; scanned: number; fmt: (n: number) => string }) {
   const t = useT();
   const total = disk.totalSpace;
@@ -581,4 +584,14 @@ function SpaceBar({ disk, scanned, fmt }: { disk: NonNullable<Target["disk"]>; s
       </div>
     </div>
   );
+}
+
+/** Adds `item` unless a selected folder already contains it; drops selected items inside it. */
+function addToSelection(selection: Map<string, Item>, item: Item) {
+  const inside = (child: string, parent: string) => child.startsWith(parent + "/") || child.startsWith(parent + "\\");
+  for (const p of selection.keys()) {
+    if (inside(item.path, p)) return;
+    if (inside(p, item.path)) selection.delete(p);
+  }
+  selection.set(item.path, item);
 }

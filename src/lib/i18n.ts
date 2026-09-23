@@ -3,6 +3,25 @@ import { isWindows } from "./platform";
 import { useSettings } from "./settings";
 
 const en = {
+  tabLargest: "Largest",
+  cleanable: "{size} cleanable",
+  suggestions: "Suggestions",
+  canFree: "Up to {size} can be freed here",
+  safeTotal: "{size} of it is safe to delete",
+  suggestionsHint: "Known caches, build folders and leftovers, detected on your computer without sending anything online.",
+  safe: "Safe to delete",
+  review: "Review first",
+  selectAll: "Select all",
+  deselectAll: "Deselect all",
+  showItems: "Show {n} items",
+  hideItems: "Hide items",
+  noSuggestions: "Nothing to suggest in this folder",
+  catDeveloper: "Development",
+  catDesign: "Design & video",
+  catBrowser: "Browsers",
+  catApps: "Apps",
+  catSystem: "System",
+  catDownloads: "Downloads",
   noAccess: "No access",
   selectHint: "Tick files and folders to collect them for deletion",
   tagline: "See what's taking up your disk space",
@@ -88,6 +107,25 @@ export type Key = keyof typeof en;
 type Dict = Partial<Record<Key, string>>;
 
 const es: Dict = {
+  tabLargest: "Más grandes",
+  cleanable: "{size} liberables",
+  suggestions: "Sugerencias",
+  canFree: "Puedes liberar hasta {size} aquí",
+  safeTotal: "{size} son seguros de borrar",
+  suggestionsHint: "Cachés, carpetas de compilación y restos conocidos, detectados en tu equipo sin enviar nada a internet.",
+  safe: "Seguro de borrar",
+  review: "Revisar antes",
+  selectAll: "Seleccionar todo",
+  deselectAll: "Quitar selección",
+  showItems: "Ver {n} elementos",
+  hideItems: "Ocultar elementos",
+  noSuggestions: "No hay sugerencias en esta carpeta",
+  catDeveloper: "Desarrollo",
+  catDesign: "Diseño y video",
+  catBrowser: "Navegadores",
+  catApps: "Apps",
+  catSystem: "Sistema",
+  catDownloads: "Descargas",
   noAccess: "Sin acceso",
   selectHint: "Marca archivos y carpetas para juntarlos y eliminarlos",
   tagline: "Descubre qué está ocupando tu disco",
@@ -170,6 +208,11 @@ const es: Dict = {
 };
 
 const pt: Dict = {
+  tabLargest: "Maiores",
+  suggestions: "Sugestões",
+  safe: "Seguro excluir",
+  review: "Revisar antes",
+  selectAll: "Selecionar tudo",
   noAccess: "Sem acesso",
   selectHint: "Marque arquivos e pastas para reuni-los e excluí-los",
   tagline: "Veja o que está ocupando seu disco",
@@ -231,6 +274,11 @@ const pt: Dict = {
 };
 
 const fr: Dict = {
+  tabLargest: "Plus gros",
+  suggestions: "Suggestions",
+  safe: "Suppression sans risque",
+  review: "À vérifier",
+  selectAll: "Tout sélectionner",
   noAccess: "Accès refusé",
   selectHint: "Cochez des fichiers et dossiers pour les regrouper avant suppression",
   tagline: "Découvrez ce qui occupe votre disque",
@@ -277,6 +325,11 @@ const fr: Dict = {
 };
 
 const de: Dict = {
+  tabLargest: "Größte",
+  suggestions: "Vorschläge",
+  safe: "Sicher löschbar",
+  review: "Erst prüfen",
+  selectAll: "Alle auswählen",
   noAccess: "Kein Zugriff",
   selectHint: "Dateien und Ordner zum Löschen abhaken",
   tagline: "Finde heraus, was deinen Speicher belegt",
@@ -323,6 +376,11 @@ const de: Dict = {
 };
 
 const it: Dict = {
+  tabLargest: "Più grandi",
+  suggestions: "Suggerimenti",
+  safe: "Sicuro da eliminare",
+  review: "Da verificare",
+  selectAll: "Seleziona tutto",
   noAccess: "Accesso negato",
   selectHint: "Spunta file e cartelle da raccogliere per l'eliminazione",
   tagline: "Scopri cosa occupa il tuo disco",
@@ -369,6 +427,25 @@ const it: Dict = {
 };
 
 const zh: Dict = {
+  tabLargest: "最大",
+  cleanable: "可清理 {size}",
+  suggestions: "清理建议",
+  canFree: "此处最多可释放 {size}",
+  safeTotal: "其中 {size} 可安全删除",
+  suggestionsHint: "已知的缓存、构建文件夹和残留文件，在本机检测，不会上传任何内容。",
+  safe: "可安全删除",
+  review: "请先检查",
+  selectAll: "全选",
+  deselectAll: "取消全选",
+  showItems: "显示 {n} 项",
+  hideItems: "隐藏",
+  noSuggestions: "此文件夹没有清理建议",
+  catDeveloper: "开发",
+  catDesign: "设计与视频",
+  catBrowser: "浏览器",
+  catApps: "应用",
+  catSystem: "系统",
+  catDownloads: "下载",
   noAccess: "无权访问",
   selectHint: "勾选文件和文件夹以便统一删除",
   tagline: "看看是什么占用了你的磁盘空间",

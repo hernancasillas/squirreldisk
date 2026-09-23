@@ -369,6 +369,21 @@ fn bench() {
         );
     });
     let tree = scan(&opts, &progress).unwrap();
+    let home = std::env::var_os("HOME").map(PathBuf::from);
+    let mut totals: std::collections::BTreeMap<&str, (u64, usize)> = Default::default();
+    for i in crate::insights::find(&tree, &opts.root, home.as_deref()) {
+        let e = totals.entry(i.rule).or_default();
+        e.0 += i.size;
+        e.1 += 1;
+    }
+    let mut totals: Vec<_> = totals.into_iter().collect();
+    totals.sort_by_key(|(_, (size, _))| std::cmp::Reverse(*size));
+    for (rule, (size, n)) in totals {
+        println!(
+            "insight {rule:<24} {:>8.2} GB  ({n} items)",
+            size as f64 / 1e9
+        );
+    }
     println!(
         "{} files, {} dirs, {} bytes, {} errors in {:?}",
         tree.files,

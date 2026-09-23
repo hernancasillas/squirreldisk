@@ -28,6 +28,20 @@ export interface FileEntry {
   size: number;
 }
 
+export type Safety = "safe" | "review";
+export type InsightCategory = "developer" | "design" | "browser" | "apps" | "system" | "downloads";
+
+export interface Insight {
+  rule: string;
+  category: InsightCategory;
+  safety: Safety;
+  path: string;
+  name: string;
+  size: number;
+  files: number;
+  isDir: boolean;
+}
+
 export interface ScanProgress {
   files: number;
   dirs: number;
@@ -68,6 +82,7 @@ export const api = {
     invoke<TreeNode>("get_tree", { path, depth, minRatio, limit }),
   largestFiles: (path: string, limit: number) =>
     invoke<FileEntry[]>("largest_files", { path, limit }),
+  insights: () => invoke<Insight[]>("find_insights"),
   deleteItems: (paths: string[], permanent: boolean) =>
     invoke<DeleteOutcome[]>("delete_items", { paths, permanent }),
   reveal: (path: string) => invoke<void>("reveal", { path }),

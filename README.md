@@ -23,6 +23,10 @@
   <img src="docs/screenshot-home.png" width="49%" alt="Disk list" />
 </p>
 
+<p align="center">
+  <img src="docs/screenshot-suggestions.png" width="80%" alt="Cleanup suggestions" />
+</p>
+
 SquirrelDisk is an open source alternative to DaisyDisk, WinDirStat, WizTree and TreeSize. Pick a disk or folder, and an interactive sunburst or treemap shows where the space went. Collect what you don't need and move it to the Trash in one go.
 
 This is a maintained fork of [adileo/squirreldisk](https://github.com/adileo/squirreldisk), which stopped receiving updates in 2023. Most of the app was rewritten. The main goal was to make it run natively on Apple Silicon and to fix the scans that hung at 100%. The [changelog](CHANGELOG.md) lists every upstream issue it closes.
@@ -35,6 +39,7 @@ This is a maintained fork of [adileo/squirreldisk](https://github.com/adileo/squ
 - **No double counting on macOS.** The APFS data volume is reached through firmlinks and is counted once. The scan never enters other mounted volumes.
 - **Sunburst and treemap views** with readable labels, hover tooltips, and one color legend shared with the file list.
 - **"Largest files" tab** lists the biggest files anywhere inside the current folder.
+- **Cleanup suggestions.** SquirrelDisk recognizes about 40 kinds of well-known caches and build folders: Xcode DerivedData, simulators, `node_modules`, package manager caches, Gradle, Adobe media cache, Final Cut render files, browser caches, iPhone backups and more. It explains what each one is and whether it's safe to delete or should be reviewed first, and it all runs on your computer.
 - **Safe cleanup.** Tick files and folders, then move them to the Trash or Recycle Bin (you can also delete permanently). Nothing is deleted without confirmation, and the app only deletes items that are part of the scan.
 - **Disk overview.** A bar shows scanned space, space the scan could not see (system, snapshots, purgeable) and free space.
 - **Rescan a single folder** without scanning the whole disk again.

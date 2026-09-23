@@ -54,13 +54,16 @@ function Treemap(props: ChartProps) {
     const isGroup = !!d.children && d.depth < MAX_DEPTH;
     if (w < 40 || h < 14) return null;
     if (!isGroup && h < 30) return null;
-    const maxChars = Math.floor((w - 10) / 6.2);
-    const name = d.data.name.length > maxChars ? d.data.name.slice(0, Math.max(maxChars - 1, 1)) + "…" : d.data.name;
     const size = formatSize(d.value ?? 0);
+    const showSize = isGroup && w > 140;
+    // Group headers put the size on the same line, so leave room for it.
+    const maxChars = Math.floor((w - 10) / 6.2) - (showSize ? size.length + 1 : 0);
+    if (maxChars < 2) return null;
+    const name = d.data.name.length > maxChars ? d.data.name.slice(0, Math.max(maxChars - 1, 1)) + "…" : d.data.name;
     return isGroup ? (
       <text x={d.x0 + 5} y={d.y0 + 13} className="tm-label tm-label-group">
         {name}
-        {w > 140 && <tspan className="tm-size"> {size}</tspan>}
+        {showSize && <tspan className="tm-size"> {size}</tspan>}
       </text>
     ) : (
       <>

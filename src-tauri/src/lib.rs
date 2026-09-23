@@ -1,4 +1,5 @@
 mod disks;
+mod insights;
 mod scan;
 mod tree;
 
@@ -308,6 +309,22 @@ fn largest_files(
     Ok(tree::largest_files(node, Path::new(&path), limit.min(5000)))
 }
 
+/// Well-known folders in the current scan that are usually safe to clean up.
+#[tauri::command]
+async fn find_insights(
+    app: AppHandle,
+    state: State<'_, AppState>,
+) -> Result<Vec<insights::Insight>, String> {
+    let home = app.path().home_dir().ok();
+    let guard = state.result.read().unwrap();
+    let result = guard.as_ref().ok_or("No scan available")?;
+    Ok(insights::find(
+        &result.root,
+        &result.root_path,
+        home.as_deref(),
+    ))
+}
+
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 struct DeleteOutcome {
@@ -447,6 +464,7 @@ pub fn run() {
             scan_summary,
             get_tree,
             largest_files,
+            find_insights,
             delete_items,
             reveal,
             open_item,
