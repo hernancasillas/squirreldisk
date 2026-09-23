@@ -37,7 +37,6 @@
     "shortDescription": "See what's taking up your disk space",
     "longDescription": "SquirrelDisk is a fast, open source disk usage analyzer with an interactive sunburst and treemap. It scans natively on Apple Silicon, Intel, Windows and Linux.",
     "copyright": "AGPL-3.0 - SquirrelDisk contributors",
-    "licenseFile": "../LICENSE",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
