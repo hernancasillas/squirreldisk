@@ -3,6 +3,9 @@ import { isWindows } from "./platform";
 import { useSettings } from "./settings";
 
 const en = {
+  updateNow: "Update and restart",
+  updating: "Downloading update… {p}%",
+  updateFailed: "The update couldn't be installed automatically",
   tabLargest: "Largest",
   cleanable: "{size} cleanable",
   suggestions: "Suggestions",
@@ -107,6 +110,9 @@ export type Key = keyof typeof en;
 type Dict = Partial<Record<Key, string>>;
 
 const es: Dict = {
+  updateNow: "Actualizar y reiniciar",
+  updating: "Descargando actualización… {p}%",
+  updateFailed: "No se pudo instalar la actualización automáticamente",
   tabLargest: "Más grandes",
   cleanable: "{size} liberables",
   suggestions: "Sugerencias",
@@ -208,6 +214,8 @@ const es: Dict = {
 };
 
 const pt: Dict = {
+  updateNow: "Atualizar e reiniciar",
+  updating: "Baixando atualização… {p}%",
   tabLargest: "Maiores",
   suggestions: "Sugestões",
   safe: "Seguro excluir",
@@ -274,6 +282,8 @@ const pt: Dict = {
 };
 
 const fr: Dict = {
+  updateNow: "Mettre à jour et redémarrer",
+  updating: "Téléchargement de la mise à jour… {p} %",
   tabLargest: "Plus gros",
   suggestions: "Suggestions",
   safe: "Suppression sans risque",
@@ -325,6 +335,8 @@ const fr: Dict = {
 };
 
 const de: Dict = {
+  updateNow: "Aktualisieren und neu starten",
+  updating: "Update wird geladen… {p} %",
   tabLargest: "Größte",
   suggestions: "Vorschläge",
   safe: "Sicher löschbar",
@@ -376,6 +388,8 @@ const de: Dict = {
 };
 
 const it: Dict = {
+  updateNow: "Aggiorna e riavvia",
+  updating: "Download dell'aggiornamento… {p}%",
   tabLargest: "Più grandi",
   suggestions: "Suggerimenti",
   safe: "Sicuro da eliminare",
@@ -427,6 +441,9 @@ const it: Dict = {
 };
 
 const zh: Dict = {
+  updateNow: "更新并重启",
+  updating: "正在下载更新… {p}%",
+  updateFailed: "无法自动安装更新",
   tabLargest: "最大",
   cleanable: "可清理 {size}",
   suggestions: "清理建议",

@@ -52,6 +52,9 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Signs the update bundles; the app only installs updates signed with this key.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ github.ref_name }}
           releaseName: SquirrelDisk ${{ github.ref_name }}
@@ -91,7 +94,7 @@ jobs:
         run: |
           mkdir assets
           gh release download "${{ github.ref_name }}" --repo "${{ github.repository }}" --dir assets --skip-existing
-          rm -f assets/SHA256SUMS.txt assets/latest.json
+          rm -f assets/SHA256SUMS.txt assets/latest.json assets/*.sig
           cd assets && sha256sum * > ../SHA256SUMS.txt && cat ../SHA256SUMS.txt
 
       - uses: actions/attest-build-provenance@v3

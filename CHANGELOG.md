@@ -2,6 +2,10 @@
 
 ## 0.5.0
 
+### Automatic updates
+
+- SquirrelDisk now updates itself. When a new release is out, a banner offers **Update and restart**: the update is downloaded, its signature is checked against the key built into the app, and the app restarts on the new version. This works for the macOS app, the Windows installers and the Linux AppImage. The `.deb`/`.rpm` packages and the portable Windows exe show a download link instead. You can turn off update checks in Settings.
+
 ### Cleanup suggestions
 
 - New **Suggestions** tab. It lists well-known folders that are usually safe to clean up and shows how much space each one takes. It covers developer tools (Xcode DerivedData, device support files, archives, simulators, `node_modules`, npm/Yarn/pnpm/Bun caches, Rust `target`, Gradle, CocoaPods, Flutter, Python, Go, Homebrew, Docker, IDE caches), design and video apps (Adobe media cache, Final Cut Pro render files, Figma), browsers, chat apps, Spotify, iPhone backups, logs, temporary files and installers left in Downloads.

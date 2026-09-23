@@ -49,10 +49,26 @@
       "signingIdentity": "-"
     },
     "windows": {
-      "webviewInstallMode": { "type": "embedBootstrapper" }
+      "webviewInstallMode": {
+        "type": "embedBootstrapper"
+      }
     },
     "linux": {
-      "deb": { "depends": [] }
+      "deb": {
+        "depends": []
+      }
+    },
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IENCQTc1OTQ2RkExQzI2NUQKUldSZEpoejZSbG1ueTl4Ym13YjBvK25jL0ZKUWlhQ0lpbzRqR2lBcTNuZ05SNkl0U0pnVXVwQi8K",
+      "endpoints": [
+        "https://github.com/hernancasillas/squirreldisk/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
     }
   }
 }
