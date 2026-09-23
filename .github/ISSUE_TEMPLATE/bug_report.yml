@@ -1,0 +1,25 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: SquirrelDisk version
+      placeholder: "0.4.0"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "macOS 15.5 on M2, Windows 11 24H2, Ubuntu 24.04..."
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Steps to reproduce, what you expected and what you saw. Screenshots help a lot.
+    validations:
+      required: true

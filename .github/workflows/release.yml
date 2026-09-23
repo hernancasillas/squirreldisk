@@ -1,0 +1,104 @@
+name: Release
+
+# Push a tag like v0.4.0 to build every platform and create a draft release.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: --target universal-apple-darwin
+            rust-targets: aarch64-apple-darwin,x86_64-apple-darwin
+          - platform: ubuntu-22.04
+            args: ""
+          - platform: ubuntu-22.04-arm
+            args: ""
+          - platform: windows-latest
+            args: ""
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install Linux dependencies
+        if: startsWith(matrix.platform, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust-targets }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - run: npm ci
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: SquirrelDisk ${{ github.ref_name }}
+          releaseBody: |
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for what's new.
+
+            **macOS** (Apple Silicon and Intel): download the `universal.dmg`. The first time, macOS may say it can't verify the app: open **System Settings → Privacy & Security** and click **Open Anyway**, or run `xattr -dr com.apple.quarantine /Applications/SquirrelDisk.app`.
+            **Windows**: use the `-setup.exe` installer, or the `portable.exe` if you don't want to install anything.
+            **Linux**: `.deb`, `.rpm` or `.AppImage` for x86_64 and arm64.
+
+            Every file is built from source by GitHub Actions. Verify with `SHA256SUMS.txt` or `gh attestation verify <file> --repo ${{ github.repository }}`.
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
+
+      - name: Upload portable Windows executable
+        if: matrix.platform == 'windows-latest'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version=$(node -p "require('./package.json').version")
+          cp src-tauri/target/release/squirreldisk.exe "SquirrelDisk_${version}_x64_portable.exe"
+          gh release upload "${{ github.ref_name }}" "SquirrelDisk_${version}_x64_portable.exe" --clobber
+
+  checksums:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir assets
+          gh release download "${{ github.ref_name }}" --repo "${{ github.repository }}" --dir assets --skip-existing
+          rm -f assets/SHA256SUMS.txt assets/latest.json
+          cd assets && sha256sum * > ../SHA256SUMS.txt && cat ../SHA256SUMS.txt
+
+      - uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: assets/*
+
+      - name: Upload checksums
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ github.ref_name }}" SHA256SUMS.txt --clobber --repo "${{ github.repository }}"

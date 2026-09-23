@@ -1,0 +1,11 @@
+name: Feature request
+description: Suggest an idea
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like SquirrelDisk to do?
+      description: Describe the problem it solves for you.
+    validations:
+      required: true

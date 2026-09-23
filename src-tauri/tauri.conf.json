@@ -1,91 +1,59 @@
 {
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "SquirrelDisk",
+  "version": "0.4.0",
+  "identifier": "io.github.hernancasillas.squirreldisk",
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist"
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
   },
-  "package": {
-    "productName": "SquirrelDisk",
-    "version": "0.3.4"
-  },
-  "tauri": {
-    "allowlist": {
-      "all": true,
-      "fs": {
-        "all": false,
-        "copyFile": false,
-        "createDir": false,
-        "exists": false,
-        "readDir": false,
-        "readFile": false,
-        "removeDir": true,
-        "removeFile": true,
-        "renameFile": false,
-        "scope": [
-          "**"
-        ],
-        "writeFile": false
-      }
-    },
-    "bundle": {
-      "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
-      "deb": {
-        "depends": []
-      },
-      "externalBin": [
-        "bin/pdu"
-      ],
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/256x256.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "identifier": "com.squirreldisk.dev",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
-    },
-    "security": {
-      "csp": null
-    },
-    "updater": {
-      "active": true,
-      "endpoints": [
-        "https://www.squirreldisk.com/api/updates/{{target}}/{{current_version}}"
-      ],
-      "dialog": true,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk3QjIwNUJBRkM0MDE0OTUKUldTVkZFRDh1Z1d5bHdSbS85UmovVUdiOHk1dy9zTnZzb2xtb0ppbGIzS3E3NUdHUnB1QldjRVAK"
-    },
-    "macOSPrivateApi": true,
+  "app": {
+    "withGlobalTauri": false,
     "windows": [
       {
-        "fullscreen": false,
-        "height": 600,
-        "resizable": true,
+        "label": "main",
         "title": "SquirrelDisk",
-        "width": 1100,
-        "decorations": false,
-        "transparent": true,
-        "center": true
+        "width": 1180,
+        "height": 740,
+        "minWidth": 820,
+        "minHeight": 540,
+        "center": true,
+        "resizable": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "dragDropEnabled": true
       }
-    ]
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; connect-src 'self' ipc: http://ipc.localhost https://api.github.com"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Utility",
+    "shortDescription": "See what's taking up your disk space",
+    "longDescription": "SquirrelDisk is a fast, open source disk usage analyzer with an interactive sunburst and treemap. It scans natively on Apple Silicon, Intel, Windows and Linux.",
+    "copyright": "AGPL-3.0 - SquirrelDisk contributors",
+    "licenseFile": "../LICENSE",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "macOS": {
+      "minimumSystemVersion": "10.15",
+      "signingIdentity": "-"
+    },
+    "windows": {
+      "webviewInstallMode": { "type": "embedBootstrapper" }
+    },
+    "linux": {
+      "deb": { "depends": [] }
+    }
   }
 }

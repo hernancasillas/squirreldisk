@@ -1,84 +1,130 @@
-# SquirrelDisk
-
-<br>
-
 <p align="center">
-    <a href="https://github.com/adileo/squirreldisk"><img src="https://img.shields.io/github/v/release/adileo/squirreldisk?color=%23ff00a0&include_prereleases&label=version&sort=semver&style=flat-square"></a>
-     &nbsp;
-      <a href="https://github.com/adileo/squirreldisk"><img src="https://shields.io/badge/-ALPHA-orange?color=%23ff00a0&include_prereleases&label=status&sort=semver&style=flat-square"></a>
-    &nbsp;
-    <a href="https://github.com/adileo/squirreldisk"><img src="https://img.shields.io/badge/built_with-Rust-dca282.svg?style=flat-square"></a>
-     &nbsp;
-     <a href="https://discord.gg/Xp8QtMM65w"><img src="https://img.shields.io/badge/Discord-%235865F2.svg?style=flat-square&logo=discord&logoColor=white"></a>
-   
+  <img src="public/squirrel.png" width="96" alt="SquirrelDisk logo" />
 </p>
 
-<div align="center">
+<h1 align="center">SquirrelDisk</h1>
 
-[![Windows Support](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/adileo/squirreldisk/releases) [![Ubuntu Support](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)](https://github.com/adileo/squirreldisk/releases) [![Windows Support](https://img.shields.io/badge/MACOS-adb8c5?style=for-the-badge&logo=macos&logoColor=white)](https://github.com/adileo/squirreldisk/releases)
+<p align="center">
+  <strong>See what's taking up your disk space.</strong><br />
+  A fast, open source disk usage analyzer for macOS (Apple Silicon and Intel), Windows and Linux.
+</p>
 
-</div>
+<p align="center">
+  <a href="https://github.com/hernancasillas/squirreldisk/releases/latest"><img src="https://img.shields.io/github/v/release/hernancasillas/squirreldisk?color=7b8cff&label=download&style=flat-square" alt="Latest release" /></a>
+  <a href="https://github.com/hernancasillas/squirreldisk/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/hernancasillas/squirreldisk/ci.yml?branch=main&style=flat-square&label=CI" alt="CI status" /></a>
+  <img src="https://img.shields.io/badge/built_with-Rust_%2B_Tauri_2-dca282.svg?style=flat-square" alt="Built with Rust and Tauri 2" />
+  <img src="https://img.shields.io/github/license/hernancasillas/squirreldisk?style=flat-square" alt="License AGPL-3.0" />
+</p>
 
-![Screenshot](/public/squirrel-demo-2.gif)
+![SquirrelDisk sunburst view](docs/screenshot-sunburst.png)
 
-## What's taking your hard disk space?
+<p align="center">
+  <img src="docs/screenshot-treemap.png" width="49%" alt="Treemap view" />
+  <img src="docs/screenshot-home.png" width="49%" alt="Disk list" />
+</p>
 
-The easiest open source app you will ever use to detect huge files. Built with Rust + React (Tauri).
+SquirrelDisk is an open source alternative to DaisyDisk, WinDirStat, WizTree and TreeSize. Pick a disk or folder, and an interactive sunburst or treemap shows where the space went. Collect what you don't need and move it to the Trash in one go.
 
-Squirreldisk is an open source alternative to softwares like: WinDirStat, WizTree, TreeSize and DaisyDisk.
+This is a maintained fork of [adileo/squirreldisk](https://github.com/adileo/squirreldisk), which stopped receiving updates in 2023. Most of the app was rewritten. The main goal was to make it run natively on Apple Silicon and to fix the scans that hung at 100%. The [changelog](CHANGELOG.md) lists every upstream issue it closes.
 
-Some features:
+## Features
 
-- Fast scan and deep directory scanning
-- Disk scanning or pick a directory
-- External disks real-time detection
-- A sunburst chart to quickly visualize the disk usage
-- Drag and drop: collect all items to be deleted
-- Right click on a folder/file to open the file explorer
-- Cross-Platform MacOS, Windows, Linux
-- Auto-updater: get notified when there is a new update (only on app launch - no notification spamming thanks)
+- **Native on every platform.** A universal macOS build runs natively on M1/M2/M3/M4 and Intel. Windows and Linux builds are for x86_64, and Linux also has arm64.
+- **Fast, in-process scanner.** It scans on all cores and reports live progress. You can cancel at any time. It no longer depends on an external `pdu` binary.
+- **Accurate sizes.** Sizes are what files really use on disk. Sparse files, such as Docker, OrbStack and VM images, no longer show as terabytes. Cloud placeholders from iCloud, Dropbox and OneDrive count only what is stored locally. Hard links are counted once.
+- **No double counting on macOS.** The APFS data volume is reached through firmlinks and is counted once. The scan never enters other mounted volumes.
+- **Sunburst and treemap views** with readable labels, hover tooltips, and one color legend shared with the file list.
+- **"Largest files" tab** lists the biggest files anywhere inside the current folder.
+- **Safe cleanup.** Tick files and folders, then move them to the Trash or Recycle Bin (you can also delete permanently). Nothing is deleted without confirmation, and the app only deletes items that are part of the scan.
+- **Disk overview.** A bar shows scanned space, space the scan could not see (system, snapshots, purgeable) and free space.
+- **Rescan a single folder** without scanning the whole disk again.
+- **Excluded folders.** Skip folders you never want to scan.
+- **Drag and drop** a folder onto the window, or run `squirreldisk /path/to/folder` from a terminal.
+- **Keyboard shortcuts.** <kbd>Esc</kbd> or <kbd>Backspace</kbd> goes up one level. <kbd>Delete</kbd> (or <kbd>⌘ Backspace</kbd>) moves the selection to the Trash. <kbd>Shift + Delete</kbd> deletes it permanently.
+- **7 languages:** English, Español, Português, Français, Deutsch, Italiano and 简体中文.
+- **Private.** No analytics or trackers. The only network request is an optional check for new releases on GitHub, which you can turn off in Settings.
 
-## Installation
+## Install
 
-Please note that the current version is not 100% stable yet, and you may encounter bugs.
+Download the latest version from the [releases page](https://github.com/hernancasillas/squirreldisk/releases/latest).
+
+### macOS (Apple Silicon and Intel)
+
+1. Download `SquirrelDisk_x.y.z_universal.dmg`, open it and drag SquirrelDisk to Applications.
+2. The app is open source but not notarized by Apple. The first time you open it, macOS says it can't verify the developer. Open **System Settings → Privacy & Security**, scroll down and click **Open Anyway**. You only do this once.
+
+   Or run this command in Terminal:
+
+   ```sh
+   xattr -dr com.apple.quarantine /Applications/SquirrelDisk.app
+   ```
+
+3. Optional: give SquirrelDisk **Full Disk Access** (System Settings → Privacy & Security → Full Disk Access). Without it, macOS hides some protected folders from the scan. The app shows how many items it couldn't read, with a button that opens this setting.
 
 ### Windows
 
-1. Download the installer from the [release page](https://github.com/adileo/squirreldisk/releases)
-2. The binary is not signed so Windows could open a popup window warning you that the file is unsecure, just click on "More Information" > "Run Anyway"
+Download `SquirrelDisk_x.y.z_x64-setup.exe`. If you don't want to install anything, download `SquirrelDisk_x.y.z_x64_portable.exe`. The builds are not code-signed, so SmartScreen may warn you: click **More info → Run anyway**.
 
-[Why the binary isn't Codesigned and marked as unsafe?](https://news.ycombinator.com/item?id=19330062)
+### Linux
 
-### Ubuntu
+Download the `.deb` (Debian/Ubuntu), `.rpm` (Fedora/openSUSE) or `.AppImage` for your architecture (`amd64`/`x86_64` or `arm64`/`aarch64`). The builds need WebKitGTK 4.1, which ships with Ubuntu 22.04+, Debian 12+, Fedora 36+ and newer distributions.
 
-1. Download the .deb package from the [release page](https://github.com/adileo/squirreldisk/releases)
-2. Install
+### Verify your download
 
-### MacOS
+Every release is built from source by [GitHub Actions](.github/workflows/release.yml). No binaries are committed to the repository. Each release includes `SHA256SUMS.txt` and a signed build provenance attestation. You can check any file with:
 
-1. Download the .dmg from the [release page](https://github.com/adileo/squirreldisk/releases)
-2. Install the app from the .dmg
-3. First time you open the App: `Right click > Open` once (it won't run, since the binaries are not signed an alert will appear), then do it again `Right click > Open` to bypass the issue, it won't happen again after the first time.
+```sh
+gh attestation verify SquirrelDisk_0.4.0_universal.dmg --repo hernancasillas/squirreldisk
+```
 
-## Disclaimer
+## Build from source
 
-This app was a project from 2 years ago built in Electron in 2 days, I decided to port it to Tauri to achieve better performances and to make it Open Source. Yay.
+Requirements: [Rust](https://rustup.rs) (stable), [Node.js](https://nodejs.org) 20+, and the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) for your platform.
 
-The code is still spaghetti and needs a lot of refactoring.
+```sh
+git clone https://github.com/hernancasillas/squirreldisk
+cd squirreldisk
+npm install
+npm run tauri dev      # run in development mode
+npm run tauri build    # build an installer for your machine
+```
 
-## Bug Reporting
+To build a universal macOS app:
 
-If you find any bugs, please report it by submitting an issue on our [issue page](https://github.com/adileo/squirreldisk/issues) with a detailed explanation. Giving some screenshots would also be very helpful.
+```sh
+rustup target add aarch64-apple-darwin x86_64-apple-darwin
+npm run tauri build -- --target universal-apple-darwin
+```
 
-## Feature Request
+Run the tests:
 
-You can also submit a feature request on our [issue page](https://github.com/adileo/squirreldisk/issues) or [discussions](https://github.com/adileo/squirreldisk/discussions) and we will try to implement it as soon as possible.
+```sh
+npm test
+cd src-tauri && cargo test
+```
 
-## Contributions
+## How it works
 
-- [Join our Discord Server](https://discord.gg/Xp8QtMM65w)
+The Rust backend (`src-tauri/src`) walks the file system in parallel with [rayon](https://github.com/rayon-rs/rayon) and keeps the whole tree in memory. The React frontend never receives the full tree. It asks for small, pruned views (the focused folder, a few levels deep, with tiny items folded into "smaller items"). This keeps the UI fast even for disks with millions of files. Deleting or rescanning a folder updates the tree in place.
+
+| File | Purpose |
+| --- | --- |
+| `src-tauri/src/scan.rs` | Parallel scanner: allocated sizes, hard-link deduplication, mount and firmlink handling |
+| `src-tauri/src/tree.rs` | In-memory tree, pruned views, largest files, removal and splicing |
+| `src-tauri/src/lib.rs` | Tauri commands and events |
+| `src/components/Sunburst.tsx`, `Treemap.tsx` | Charts (d3-hierarchy + React SVG) |
+| `src/components/Results.tsx` | Results screen: list, selection, deletion, context menu |
+
+## Contributing
+
+Bug reports and pull requests are welcome. Please open an [issue](https://github.com/hernancasillas/squirreldisk/issues) with your OS version and steps to reproduce.
 
 ## Credits
 
-- [parallel-disk-usage](https://github.com/KSXGitHub/parallel-disk-usage)
-- [tauri](https://github.com/tauri-apps/tauri)
+- Original app by [Adileo Barone](https://github.com/adileo) and the [SquirrelDisk contributors](https://github.com/adileo/squirreldisk/graphs/contributors)
+- Ideas from open upstream pull requests by [@citelao](https://github.com/citelao) (#65), [@peret](https://github.com/peret) (#54), [@mmalmi](https://github.com/mmalmi) (#66), [@ckindle-42](https://github.com/ckindle-42) (#59), [@PineappleRind](https://github.com/PineappleRind) (#18) and [@Roberto-deP-Martins](https://github.com/Roberto-deP-Martins) (#67)
+- Built with [Tauri](https://tauri.app), [rayon](https://github.com/rayon-rs/rayon), [d3-hierarchy](https://github.com/d3/d3-hierarchy) and [trash-rs](https://github.com/Byron/trash-rs)
+
+## License
+
+[GNU AGPL-3.0](LICENSE), same as the original project.
