@@ -47,7 +47,7 @@ This is a maintained fork of [adileo/squirreldisk](https://github.com/adileo/squ
 - **Drag and drop** a folder onto the window, or run `squirreldisk /path/to/folder` from a terminal.
 - **Keyboard shortcuts.** <kbd>Esc</kbd> or <kbd>Backspace</kbd> goes up one level. <kbd>Delete</kbd> (or <kbd>⌘ Backspace</kbd>) moves the selection to the Trash. <kbd>Shift + Delete</kbd> deletes it permanently.
 - **7 languages:** English, Español, Português, Français, Deutsch, Italiano and 简体中文.
-- **Automatic updates.** New versions install with one click. Every update is signed, and the app refuses any update that isn't. This works for the macOS app, the Windows installer and the AppImage.
+- **Automatic updates.** New versions install with one click. Every update is signed, and the app refuses any update that isn't. This works on macOS, Windows and Linux. For the portable Windows exe, download new versions manually.
 - **Private.** No analytics or trackers. The only network request is the check for new releases on GitHub, which you can turn off in Settings.
 
 ## Install

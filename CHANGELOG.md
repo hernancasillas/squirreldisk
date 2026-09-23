@@ -4,7 +4,7 @@
 
 ### Automatic updates
 
-- SquirrelDisk now updates itself. When a new release is out, a banner offers **Update and restart**: the update is downloaded, its signature is checked against the key built into the app, and the app restarts on the new version. This works for the macOS app, the Windows installers and the Linux AppImage. The `.deb`/`.rpm` packages and the portable Windows exe show a download link instead. You can turn off update checks in Settings.
+- SquirrelDisk now updates itself. When a new release is out, a banner offers **Update and restart**: the update is downloaded, its signature is checked against the key built into the app, and the app restarts on the new version. This works on macOS, Windows (installer) and Linux (AppImage, `.deb` and `.rpm`). If an update can't be installed automatically, the banner links to the download instead. For the portable Windows exe, download new versions manually. You can turn off update checks in Settings.
 
 ### Cleanup suggestions
 
