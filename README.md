@@ -2,11 +2,14 @@
   <img src="public/squirrel.png" width="96" alt="SquirrelDisk logo" />
 </p>
 
-<h1 align="center">SquirrelDisk</h1>
+<h1 align="center">SquirrelDisk – free disk space analyzer</h1>
 
 <p align="center">
   <strong>See what's taking up your disk space.</strong><br />
-  A fast, open source disk usage analyzer for macOS (Apple Silicon and Intel), Windows and Linux.
+  A fast, open source disk usage analyzer for macOS (Apple Silicon and Intel), Windows and Linux.<br />
+  <a href="https://hernancasillas.github.io/squirreldisk/"><strong>Website</strong></a> ·
+  <a href="https://github.com/hernancasillas/squirreldisk/releases/latest"><strong>Download</strong></a> ·
+  <a href="https://hernancasillas.github.io/squirreldisk/es/">Español</a>
 </p>
 
 <p align="center">
@@ -27,7 +30,9 @@
   <img src="docs/screenshot-suggestions.png" width="80%" alt="Cleanup suggestions" />
 </p>
 
-SquirrelDisk is an open source alternative to DaisyDisk, WinDirStat, WizTree and TreeSize. Pick a disk or folder, and an interactive sunburst or treemap shows where the space went. Collect what you don't need and move it to the Trash in one go.
+SquirrelDisk shows what's taking up space on your disk and helps you free it. Pick a disk or folder, and an interactive sunburst or treemap shows where the space went. The Suggestions tab points out caches and build folders you can safely delete, such as Xcode DerivedData, `node_modules`, Gradle caches and the Adobe media cache. Collect what you don't need and move it to the Trash in one go.
+
+It is a free, open source alternative to **DaisyDisk**, **GrandPerspective** and **OmniDiskSweeper** on macOS, **WinDirStat**, **WizTree**, **TreeSize** and **SpaceSniffer** on Windows, and **Baobab** and **QDirStat** on Linux.
 
 This is a maintained fork of [adileo/squirreldisk](https://github.com/adileo/squirreldisk), which stopped receiving updates in 2023. Most of the app was rewritten. The main goal was to make it run natively on Apple Silicon and to fix the scans that hung at 100%. The [changelog](CHANGELOG.md) lists every upstream issue it closes.
 
@@ -82,6 +87,23 @@ Every release is built from source by [GitHub Actions](.github/workflows/release
 ```sh
 gh attestation verify SquirrelDisk_0.4.0_universal.dmg --repo hernancasillas/squirreldisk
 ```
+
+## FAQ
+
+**How do I find what's taking up space on my Mac?**
+Open SquirrelDisk and click *Macintosh HD*. In about a minute you get a chart of every folder by size. Open the **Suggestions** tab to see caches you can delete safely.
+
+**Is it safe to delete Xcode DerivedData?**
+Yes. It only holds build products and indexes, and Xcode recreates it the next time you build. The same goes for `node_modules` (run `npm install` again), Rust `target` folders and Gradle caches.
+
+**Does it run on M1, M2, M3 and M4 Macs?**
+Yes. It's a universal app that runs natively on Apple Silicon and on Intel. It doesn't need Rosetta.
+
+**Why does macOS say it can't verify the app?**
+The app isn't notarized by Apple. Click **Open Anyway** in System Settings → Privacy & Security. You only do this once. See [Install](#macos-apple-silicon-and-intel).
+
+**Is it free?**
+Yes. It's open source (AGPL-3.0), with no ads, subscriptions or tracking.
 
 ## Build from source
 
